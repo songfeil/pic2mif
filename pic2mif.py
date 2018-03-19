@@ -1,12 +1,13 @@
-import sys
+import os
 import argparse
 from PIL import Image
+
 
 def rgb2bin(tuple, bit_per_channel):
     binstr = ""
     if (bit_per_channel < 8):
         for i in tuple:
-            scale = i * (2**bit_per_channel - 1) // (2**8 - 1)
+            scale = i * (2 ** bit_per_channel - 1) // (2 ** 8 - 1)
             form = "{0:0%db}" % bit_per_channel
             binstr += form.format(scale)
     else:
@@ -15,16 +16,21 @@ def rgb2bin(tuple, bit_per_channel):
             binstr += form.format(i)
     return binstr
 
+
 def main():
     parser = argparse.ArgumentParser(description="A tool to change picture to .mif file.")
-    parser.add_argument('-w', '--width', type=int, default=6, help="Bit per channel, by default 8",)
+    parser.add_argument('-w', '--width', type=int, default=6, help="Bit per channel, by default 8", )
     parser.add_argument('input_file', help="Input pic file name")
-    parser.add_argument('-o', '--output', default="out.mif", help="Output file name, default is 'out.mif'.")
+    parser.add_argument('-o', '--output', help="Output file name.")
     args = parser.parse_args()
 
     bit_per_channel = args.width
     input_filename = args.input_file
     output_filename = args.output
+
+    if output_filename is None:
+        output_filename = os.path.basename(input_filename).split('.')[0] + ".mif"
+
     print("> Running with depth %d, output file name '%s'" % (bit_per_channel, output_filename))
 
     im = Image.open(input_filename)
@@ -61,6 +67,7 @@ CONTENT BEGIN
     outf.close()
 
     print("> Done!")
+
 
 if __name__ == "__main__":
     main()
