@@ -18,5 +18,5 @@ optional arguments:
   -w WIDTH, --width WIDTH
                         Bit per channel, by default 8
   -o OUTPUT, --output OUTPUT
-                        Output file name, default is 'out.mif'.
+                        Output file name.
 ```
