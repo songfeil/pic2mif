@@ -5,9 +5,10 @@ from PIL import Image
 
 def rgb2bin(tuple, bit_per_channel):
     binstr = ""
+    print(tuple)
     if (bit_per_channel < 8):
         for i in tuple:
-            scale = i * (2 ** bit_per_channel - 1) // (2 ** 8 - 1)
+            scale = i >> (8 - bit_per_channel)
             form = "{0:0%db}" % bit_per_channel
             binstr += form.format(scale)
     else:
@@ -19,7 +20,7 @@ def rgb2bin(tuple, bit_per_channel):
 
 def main():
     parser = argparse.ArgumentParser(description="A tool to change picture to .mif file.")
-    parser.add_argument('-w', '--width', type=int, default=6, help="Bit per channel, by default 8", )
+    parser.add_argument('-w', '--width', type=int, default=5, help="Bit per channel, by default 8", )
     parser.add_argument('input_file', help="Input pic file name")
     parser.add_argument('-o', '--output', help="Output file name.")
     args = parser.parse_args()
@@ -58,6 +59,7 @@ CONTENT BEGIN
         for w in range(0, pwidth):
             pixel = im.getpixel((w, h))
             line = "\t%d : %s;\n" % (count, rgb2bin(pixel, bit_per_channel))
+            print(line)
             outf.write(line)
             count += 1
 
